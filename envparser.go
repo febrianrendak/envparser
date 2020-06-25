@@ -11,6 +11,11 @@ var (
 	ErrEnvVarEmpty = errors.New("environment variable empty")
 )
 
+// ErrorIsEnvVarEmpty return true if error is same with ErrEnvVarEmpty
+func ErrorIsEnvVarEmpty(err error) bool {
+	return err != nil && err == ErrEnvVarEmpty
+}
+
 // GetEnvStr return value of env variable. Not null error returned if env variable is empty string
 func GetEnvString(key string) (string, error) {
 	v := strings.TrimSpace(os.Getenv(key))
