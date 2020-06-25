@@ -1,26 +1,21 @@
 package envparser
 
 import (
-	"errors"
 	"os"
 	"strconv"
 	"strings"
 )
 
-var (
-	ErrEnvVarEmpty = errors.New("environment variable empty")
-)
-
-// ErrorIsEnvVarEmpty return true if error is same with ErrEnvVarEmpty
-func ErrorIsEnvVarEmpty(err error) bool {
-	return err != nil && err == ErrEnvVarEmpty
-}
-
 // GetEnvStr return value of env variable. Not null error returned if env variable is empty string
 func GetEnvString(key string) (string, error) {
+	isValid := ValidateKeyName(key)
+	if isValid == false {
+		return "", &ErrorWrapper{KeyName: key, Err: ErrInvalidVarName}
+	}
+
 	v := strings.TrimSpace(os.Getenv(key))
 	if len(v) == 0 {
-		return v, ErrEnvVarEmpty
+		return v, &ErrorWrapper{KeyName: key, Err: ErrEnvVarEmpty}
 	}
 
 	return v, nil
